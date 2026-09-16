@@ -2,7 +2,7 @@
 
 Single Next.js 16 SaaS app: **ISO-aligned security management** (policies, RBAC) plus **BRS inventory operations** (planning, orders, logistics, sales, SAP integration).
 
-**Current version:** `0.35.0`
+**Current version:** `0.36.0`
 
 ## Stack
 
@@ -18,7 +18,7 @@ Next.js App Router · ShadCN · Tailwind · React Hook Form · Zod · Zustand ·
 | **Announcements** | Tenant posts (title, body, publish/expiry); list + CRUD (`/announcements`) |
 | **Competitors** | Market observations with master Competitor + Competitor brand/model lookups, AOR-bound branch, optional promotion; KPIs + CRUD (`/competitors`) |
 | **Settings** | Company, users, departments, roles, permissions catalog (`roles.manage`; assign via Roles), branches, warehouses, dealers, service centers, AORs (branches / warehouses / service centers assign + sync), master data (incl. Series / Categories, Competitors / Competitor brands), status codes (per-module tabs + badge colors); collapsible Module guides on complex settings/ops pages |
-| **Planning** | Official Forecast template (period, branch SAP code, revenue target) download + import, allocation, suggested auto-replenish orders (`/settings/planning`, `/planning/suggested-orders`) |
+| **Planning** | Official Forecast + per-SKU SFE import; **Demand Planning** wizard (versioned DP-YYYYMM-nnn) with editable Drop 1 grid; Replenishment Workbench; Coverage monitor; release to Auto replenish (`/orders/demand-planning`, `/orders/replenishment`, `/reports/demand-planning-coverage`) |
 | **Planogram** | Per-branch SKU shelf capacity, MIL, order enforcement; official Excel template (sap_code, sku, max_qty, mil_days) download + import; Add model requires Allowed models first |
 | **Policies** | Full document control (ISO track) |
 | **Inventory** | Serialized stock (STK on Stock units), **warehouse stock** SN list (`/inventory/warehouse-stock`; also Settings → Warehouses →image.png Stock), AOR-scoped lists, series QTY/VALUE + DR#/date/aging, **physical stock count / P-Count** (`/inventory/stock-count`) |
@@ -51,7 +51,11 @@ Next.js App Router · ShadCN · Tailwind · React Hook Form · Zod · Zustand ·
 | `/orders/manual` | `orders.manual.view` / `create` / `approve` (or legacy `orders.*`) |
 | `/orders/special` | `orders.special.view` / `create` / `approve` (or legacy `orders.*`) |
 | `/orders/auto-replenish` | `orders.auto_replenish.view` / `create` / `approve` (or legacy `orders.*`) |
-| `/planning/suggested-orders` | `forecast.manage` / `planogram.manage` |
+| `/planning/suggested-orders` | Redirects to `/orders/demand-planning` |
+| `/orders/demand-planning` | `forecast.manage` / `planogram.manage` — Demand Planning runs |
+| `/orders/demand-planning/new` | New Demand Planning wizard |
+| `/orders/replenishment` | Live Replenishment Workbench (all branches / per branch) |
+| `/reports/demand-planning-coverage` | Demand Planning coverage monitor |
 | `/logistics/deliveries`, `/transfers`, `/pickups` | `logistics.view` / `create` / `manage` (legacy `orders.*` aliases for list) |
 | `/operations` | `inventory.view` (combined ops view) |
 | `/sales` | `sales.view` / `sales.create` / `sales.update` (New transaction needs `sales.create`; header Edit needs `sales.update`; `?tab=returns` redirects to `/returns?tab=branch`) |

@@ -3,12 +3,12 @@ import type { ModuleGuideContent } from "@/content/module-guides/types";
 export const PLANNING_MODULE_GUIDE: ModuleGuideContent = {
   title: "Planning & Forecast",
   description:
-    "Import the official Forecast template (period, branch SAP code, revenue target), run shelf allocation against planogram capacity, and generate suggested auto-replenish drafts for branches.",
+    "Import branch revenue targets and per-SKU SFE forecasts. Demand Planning under Orders turns those inputs into a versioned Drop 1 plan and releases Auto replenish orders.",
   tips: [
-    { label: "Download the Forecast template, then upload the same file to preview and apply" },
-    { label: "Each row is one branch for a single planning period, with a revenue target" },
-    { label: "Shelf max and MIL stay on Planogram — this file does not change the shelf plan" },
-    { label: "Review drafts under Suggested orders before TL / SP approval" },
+    { label: "Download the Forecast template for branch revenue targets, and the SKU forecast template for per-model SFE qty" },
+    { label: "Open Orders → Demand Planning to run the wizard across branches" },
+    { label: "Use Replenishment Workbench for live mid-cycle adjustments on one branch" },
+    { label: "Coverage under Reports shows days of inventory versus the cycle target" },
   ],
   storageKey: "module-guide.planning",
 };
@@ -17,11 +17,10 @@ export const PLANNING_MODULE_GUIDE: ModuleGuideContent = {
 export const SUGGESTED_ORDERS_MODULE_GUIDE: ModuleGuideContent = {
   title: "Suggested orders",
   description:
-    "Draft auto-replenish requests from allocation gaps. They are not live branch orders until you submit them into the approval path.",
+    "Legacy shelf-gap drafts. Prefer Demand Planning for Drop 1 recommendations that release into Auto replenish.",
   tips: [
-    { label: "Review draft lines and gaps by branch before submitting" },
-    { label: "Submit for TL review, then SP approval on Branch orders" },
-    { label: "Regenerate from Planning after forecast or planogram changes" },
+    { label: "New replenishment work starts under Orders → Demand Planning" },
+    { label: "This page redirects to Demand Planning" },
   ],
   storageKey: "module-guide.suggested-orders",
 };

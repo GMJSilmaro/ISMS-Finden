@@ -52,6 +52,46 @@ export interface ReleaseNote {
 
 export const RELEASES: ReleaseNote[] = [
   {
+    version: "0.36.0",
+    date: "2026-09-16",
+    releasedAt: "2026-09-16T13:30:00+08:00",
+    title: "Demand Planning & replenishment",
+    highlights: [
+      "Orders → Demand Planning runs a monthly wizard that builds a numbered plan (DP-YYYYMM-nnn) from sales history, planogram mix, SFE forecast, and on-hand stock",
+      "Review Drop 1 on an editable grid, then release one Auto replenish order request per branch — re-runs create a new version instead of overwriting",
+      "Orders → Replenishment is a live per-branch workbench for mid-cycle tweaks; send selected lines straight to Ordering",
+      "Reports → DP Coverage shows network targets, allocation, and days of inventory by stage",
+      "Settings → Planning still holds branch revenue targets plus a new per-SKU SFE forecast import",
+    ],
+    changes: [
+      {
+        type: "feature",
+        description:
+          "Demand Planning wizard with versioned documents, editable Drop 1 lines, and release into Auto replenish",
+      },
+      {
+        type: "feature",
+        description:
+          "Replenishment Workbench for live branch adjustments and mid-cycle send to Ordering",
+      },
+      {
+        type: "feature",
+        description:
+          "Demand Planning coverage report with branch roll-up and days-of-inventory stages",
+      },
+      {
+        type: "feature",
+        description:
+          "Import per-SKU SFE forecast quantities from Settings → Planning",
+      },
+      {
+        type: "improvement",
+        description:
+          "Suggested orders now opens Demand Planning; shelf-gap allocation remains available on Settings → Planning for reference",
+      },
+    ],
+  },
+  {
     version: "0.35.0",
     date: "2026-09-08",
     releasedAt: "2026-09-08T14:45:00+08:00",

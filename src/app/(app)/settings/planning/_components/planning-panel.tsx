@@ -14,6 +14,10 @@ import {
   runAllocationAction,
   submitSuggestedOrdersAction,
 } from "@/features/forecast/actions/forecast.actions";
+import {
+  downloadSkuForecastTemplateAction,
+  importSkuForecastAction,
+} from "@/features/demand-planning/actions/sku-forecast-import.actions";
 
 import { AllocationGapsTable } from "@/features/forecast/components/allocation-gaps-table";
 import { ImportForecastDialog } from "@/app/(app)/settings/planning/_components/import-forecast-dialog";
@@ -29,6 +33,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
 
 interface PlanningPanelProps {
   period: {
@@ -133,6 +138,79 @@ export function PlanningPanel({
 
   return (
     <div className="space-y-6">
+      <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm">
+        <p className="font-medium">Demand Planning is the primary replenishment flow</p>
+        <p className="mt-1 text-muted-foreground">
+          Import per-SKU SFE forecasts below, then open{" "}
+          <Link href="/orders/demand-planning" className="underline underline-offset-2">
+            Orders → Demand Planning
+          </Link>{" "}
+          to run the wizard, review Drop 1, and release Order Requests. The legacy
+          shelf-gap allocation buttons remain for reference only.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={pending}
+            onClick={() =>
+              startTransition(async () => {
+                const file = await downloadSkuForecastTemplateAction(period?.label);
+                const bytes = Uint8Array.from(atob(file.base64), (c) => c.charCodeAt(0));
+                const blob = new Blob([bytes], {
+                  type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = file.fileName;
+                a.click();
+                URL.revokeObjectURL(url);
+              })
+            }
+          >
+            Download SKU forecast template
+          </Button>
+          <label htmlFor="sku-forecast-upload" className="inline-flex cursor-pointer">
+            <Input
+              type="file"
+              accept=".xlsx,.xls"
+              className="hidden"
+              id="sku-forecast-upload"
+              disabled={pending}
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (!f) return;
+                startTransition(async () => {
+                  const fd = new FormData();
+                  fd.set("file", f);
+                  const result = await importSkuForecastAction(fd);
+                  if (!result.ok) {
+                    toast.error(result.error);
+                    return;
+                  }
+                  toast.success(
+                    `Imported ${result.upserted} SKU forecasts for ${result.periodLabel}` +
+                      (result.skipped ? ` (${result.skipped} skipped)` : ""),
+                  );
+                  router.refresh();
+                });
+                e.target.value = "";
+              }}
+            />
+            <Button size="sm" variant="outline" asChild disabled={pending}>
+              <span>
+                <Upload className="mr-1 size-4" />
+                Import SKU forecast
+              </span>
+            </Button>
+          </label>
+          <Button size="sm" asChild>
+            <Link href="/orders/demand-planning/new">New Demand Planning run</Link>
+          </Button>
+        </div>
+      </div>
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard label="Active period" value={period?.label ?? "None"} />
 

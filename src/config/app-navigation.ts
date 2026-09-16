@@ -135,6 +135,20 @@ export const appNavigation: NavEntry[] = [
         ],
         badge: "new",
       },
+      {
+        href: "/orders/demand-planning",
+        label: "Demand Planning",
+        icon: LayoutGrid,
+        anyPermissions: ["forecast.manage", "planogram.manage", "forecast.view"],
+        badge: "new",
+      },
+      {
+        href: "/orders/replenishment",
+        label: "Replenishment",
+        icon: CalendarDays,
+        anyPermissions: ["forecast.manage", "planogram.manage", "forecast.view"],
+        badge: "new",
+      },
     ],
   },
   {
@@ -332,6 +346,13 @@ export const appNavigation: NavEntry[] = [
         icon: CalendarDays,
         anyPermissions: ["reports.view", "inventory.view"],
      
+      },
+      {
+        href: "/reports/demand-planning-coverage",
+        label: "DP Coverage",
+        icon: ChartColumn,
+        anyPermissions: ["reports.view", "forecast.manage", "forecast.view", "planogram.manage"],
+        badge: "new",
       },
       {
         href: "/reports/aging",
