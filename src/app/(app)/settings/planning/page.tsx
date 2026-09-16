@@ -87,12 +87,17 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
       <PageHeader
         title="Planning & Forecast"
         tutorial={PLANNING_PAGE_TUTORIAL}
-        description="Run shelf allocation, and generate suggested auto-replenish orders."
+        description="Import branch revenue targets and per-SKU SFE forecasts. Run Demand Planning under Orders to compute Drop 1 and release to Auto replenish."
         sticky={false}
         actions={
-          <Button variant="outline" asChild>
-            <Link href="/planning/suggested-orders">Suggested orders</Link>
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" asChild>
+              <Link href="/orders/demand-planning">Demand Planning</Link>
+            </Button>
+            <Button variant="outline" asChild>
+              <Link href="/orders/replenishment">Workbench</Link>
+            </Button>
+          </div>
         }
       />
       <ModuleGuide {...PLANNING_MODULE_GUIDE} />
