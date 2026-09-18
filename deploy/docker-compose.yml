@@ -1,0 +1,78 @@
+# FINDEN ISMS — pre-prod / prod stack (same file, different --env-file + project name)
+#
+# Pre-prod:
+#   docker compose -p isms-preprod --env-file /opt/isms/preprod/.env \
+#     -f deploy/docker-compose.yml up -d
+# Prod:
+#   docker compose -p isms-prod --env-file /opt/isms/prod/.env \
+#     -f deploy/docker-compose.yml up -d
+#
+# Secrets live ONLY in those server .env files — never commit them.
+# See deploy/README.md for how Compose + .env works.
+
+name: ${COMPOSE_PROJECT_NAME:-isms}
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-isms}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-isms}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\"",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    # DB stays on the internal Compose network only (no host publish).
+    networks:
+      - internal
+
+  app:
+    image: ${IMAGE:?Set IMAGE in .env (e.g. ghcr.io/org/isms:preprod)}
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    # Absolute path on the host — set HOST_ENV_FILE in that same .env
+    env_file:
+      - ${HOST_ENV_FILE:?Set HOST_ENV_FILE to the absolute path of this .env}
+    environment:
+      NODE_ENV: production
+      HOSTNAME: "0.0.0.0"
+      PORT: "3000"
+      # Always use the Compose service hostname, not localhost / the host IP.
+      DATABASE_URL: postgresql://${POSTGRES_USER:-isms}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-isms}
+      DIRECT_URL: postgresql://${POSTGRES_USER:-isms}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-isms}
+      STORAGE_ROOT: /app/data/uploads
+    ports:
+      - "${APP_BIND:-0.0.0.0}:${APP_PORT:-3000}:3000"
+    volumes:
+      - uploads_data:/app/data/uploads
+    networks:
+      - internal
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "node -e \"fetch('http://127.0.0.1:3000/login').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\"",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+volumes:
+  postgres_data:
+  uploads_data:
+
+networks:
+  internal:
+    driver: bridge

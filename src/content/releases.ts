@@ -52,6 +52,34 @@ export interface ReleaseNote {
 
 export const RELEASES: ReleaseNote[] = [
   {
+    version: "0.37.0",
+    date: "2026-09-18",
+    releasedAt: "2026-09-18T16:15:00+08:00",
+    title: "Staging & production hosting ready",
+    highlights: [
+      "ISMS can now run as separate pre-production and production environments on the client server",
+      "Updates can be tested on pre-prod first, then promoted to production without sharing the same database or uploads",
+      "Deployments are automated so new builds reach the right environment more reliably",
+    ],
+    changes: [
+      {
+        type: "feature",
+        description:
+          "Separate pre-production and production environments on the client server, each with its own data",
+      },
+      {
+        type: "improvement",
+        description:
+          "Automated deploy path so verified builds move from staging into production more safely",
+      },
+      {
+        type: "fix",
+        description:
+          "Clearer separation of environment settings so staging and live secrets are not mixed",
+      },
+    ],
+  },
+  {
     version: "0.36.0",
     date: "2026-09-16",
     releasedAt: "2026-09-16T13:30:00+08:00",

@@ -2,7 +2,7 @@
 
 Single Next.js 16 SaaS app: **ISO-aligned security management** (policies, RBAC) plus **BRS inventory operations** (planning, orders, logistics, sales, SAP integration).
 
-**Current version:** `0.36.0`
+**Current version:** `0.37.0`
 
 ## Stack
 
@@ -126,7 +126,7 @@ src/
 
 ## Setup
 
-1. Start Postgres: `docker compose up -d`
+1. Start Postgres: `docker compose up -d` (local Postgres only — see [`deploy/README.md`](deploy/README.md) for pre-prod/prod on the client server)
 2. Copy env: `cp .env.example .env.local` — set `DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET` / `BETTER_AUTH_SECRET`
 3. Install: `pnpm install`
 4. Database:
@@ -141,6 +141,12 @@ src/
 7. Dev: `pnpm run dev`
 
 See [`database/postgres.example.md`](database/postgres.example.md) for connection details and cutover notes.
+
+### Pre-prod & production (client server)
+
+Docker Compose + GitHub Actions deploy both stacks on one host (separate DB/volumes/ports). Env files on the server control secrets and URLs — not the git repo.
+
+Full guide: [`deploy/README.md`](deploy/README.md) (how `.env` works with Compose, bootstrap, CI/CD secrets, branch model).
 
 ### Demo login
 

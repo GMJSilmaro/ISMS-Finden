@@ -13,6 +13,8 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Docker / self-hosted: copyable Node server under .next/standalone
+  output: "standalone",
   // Let Node resolve @better-auth/infra's own Zod 4 dep (z.url) instead of
   // Turbopack bundling the app's Zod 3 into the plugin.
   serverExternalPackages: ["@better-auth/infra"],
