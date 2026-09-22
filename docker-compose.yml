@@ -1,6 +1,9 @@
+# Local development Postgres only (app runs on the host via `pnpm run dev`).
+# Pre-prod / prod stacks live under deploy/docker-compose.yml — see deploy/README.md.
+
 services:
   postgres:
-    image: postgres:16
+    image: pgvector/pgvector:pg16
     container_name: isms-postgres
     restart: unless-stopped
     ports:
